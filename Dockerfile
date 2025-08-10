@@ -2,32 +2,32 @@ FROM debian:bookworm-slim
 
 MAINTAINER Prosody Developers <developers@prosody.im>
 
-ARG PROSODY_PACKAGE=prosody-0.12
+ARG PROSODY_PACKAGE=prosody-13.0
 ARG LUA_PACKAGE=lua5.4
 ARG BUILD_ID=
 
 # Install dependencies
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        extrepo tini \
+    extrepo tini \
     && extrepo enable prosody \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        ${PROSODY_PACKAGE} \
-        ${LUA_PACKAGE} \
-        lua-unbound \
-        lua-sec \
-        lua-readline \
-        lua-dbi-sqlite3 \
-        lua-dbi-postgresql \
-        lua-dbi-mysql \
-        luarocks \
-        lib${LUA_PACKAGE}-dev \
+    ${PROSODY_PACKAGE} \
+    ${LUA_PACKAGE} \
+    lua-unbound \
+    lua-sec \
+    lua-readline \
+    lua-dbi-sqlite3 \
+    lua-dbi-postgresql \
+    lua-dbi-mysql \
+    luarocks \
+    lib${LUA_PACKAGE}-dev \
     && update-alternatives --set lua-interpreter /usr/bin/${LUA_PACKAGE} \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /etc/prosody/conf.d /var/run/prosody \
- && chown prosody:prosody /etc/prosody/conf.d /var/run/prosody
+    && chown prosody:prosody /etc/prosody/conf.d /var/run/prosody
 
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
